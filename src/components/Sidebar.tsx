@@ -31,15 +31,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, role }) => {
       </div>
 
       <nav className="p-4 flex flex-col gap-2">
-        <Link
-          to="/"
-          className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-700"
-          onClick={toggleSidebar}
-        >
-          <LayoutDashboard size={18} className="mr-2" />
-          Dashboard
-        </Link>
+        {(role === "admin" || role === "master admin") && (
+          <Link
+            to="/"
+            className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-700"
+            onClick={toggleSidebar}
+          >
+            <LayoutDashboard size={18} className="mr-2" />
+            Dashboard
+          </Link>
+        )}
 
+        
         {role === "admin" && (<>
           <Link
             to="/history"
@@ -95,6 +98,43 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, role }) => {
                 >
                   <Settings size={16} className="mr-2" />
                   Manage Clients
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
+
+
+        {role === "super admin" && (
+          <div>
+            <button
+              onClick={() => setClientsOpen(!clientsOpen)}
+              className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-slate-700"
+            >
+              <span className="flex items-center">
+                <Users size={18} className="mr-2" />
+                Masters
+              </span>
+              {clientsOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+            </button>
+
+            {clientsOpen && (
+              <div className="ml-8 mt-1 flex flex-col gap-1">
+                <Link
+                  to="/add-master"
+                  className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-700 text-sm"
+                  onClick={toggleSidebar}
+                >
+                  <UserPlus size={16} className="mr-2" />
+                  Add Master
+                </Link>
+                <Link
+                  to="/manage-clients"
+                  className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-700 text-sm"
+                  onClick={toggleSidebar}
+                >
+                  <Settings size={16} className="mr-2" />
+                  Manage Masters
                 </Link>
               </div>
             )}

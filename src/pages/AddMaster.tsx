@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { User, Lock, Coins, Eye, EyeOff, Phone } from "lucide-react";
 
-function AddClient() {
+function AddMaster() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [mobile, setMobile] = useState("");
@@ -43,14 +43,14 @@ function AddClient() {
         setMessage("");
 
         try {
-            const response = await fetch("http://localhost:5000/api/clients", {
+            const response = await fetch("http://localhost:5000/api/Masters", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password, mobile, points }),
             });
 
             if (response.ok) {
-                setMessage("✅ Client added successfully!");
+                setMessage("✅ Master added successfully!");
                 setUsername("");
                 setPassword("");
                 setMobile("");
@@ -71,7 +71,7 @@ function AddClient() {
         <div className="flex justify-center items-center min-h-[80vh] bg-gradient-to-br from-blue-100 via-white to-purple-100">
             <div className="w-full max-w-md bg-white/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-slate-200">
                 <h2 className="text-3xl font-bold text-center text-slate-800 mb-6">
-                    Add New Client
+                    Add New Master
                 </h2>
 
                 {message && (
@@ -91,7 +91,7 @@ function AddClient() {
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            placeholder="Username"
+                            placeholder="Master name"
                             className={`w-full pl-10 pr-3 py-2 rounded-lg border bg-white/70 focus:outline-none focus:ring-2 transition ${errors.username
                                 ? "border-red-500 focus:ring-red-400"
                                 : "border-slate-300 focus:ring-blue-500"
@@ -170,7 +170,7 @@ function AddClient() {
                         disabled={loading}
                         className="w-full py-3 px-4 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? "Saving..." : "Add Client"}
+                        {loading ? "Saving..." : "Add Master"}
                     </button>
                 </form>
             </div>
@@ -178,4 +178,4 @@ function AddClient() {
     );
 }
 
-export default AddClient;
+export default AddMaster;

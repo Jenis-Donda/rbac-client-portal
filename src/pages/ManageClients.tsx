@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Pencil, Link as LinkIcon, History, X, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+    Pencil,
+    Link as LinkIcon,
+    History,
+    X,
+    ChevronLeft,
+    ChevronRight,
+} from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 interface Client {
     id: number;
@@ -16,9 +24,7 @@ function ManageClients() {
 
     // Modal state
     const [editingClient, setEditingClient] = useState<Client | null>(null);
-    const [newUsername, setNewUsername] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [newStatus, setNewStatus] = useState<"active" | "inactive">("active");
+    const [pointsInput, setPointsInput] = useState<string>("");
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -29,57 +35,52 @@ function ManageClients() {
         const fetchClients = async () => {
             setLoading(true);
             await new Promise((resolve) => setTimeout(resolve, 800)); // simulate delay
+
             const dummyData: Client[] = Array.from({ length: 34 }, (_, i) => ({
                 id: i + 1,
                 username: `Client${i + 1}`,
                 points: Math.floor(Math.random() * 2000),
                 status: Math.random() > 0.5 ? "active" : "inactive",
             }));
+
             setClients(dummyData);
             setLoading(false);
         };
+
         fetchClients();
     }, []);
 
-    const openEditModal = (client: Client) => {
+    const openPointsModal = (client: Client) => {
         setEditingClient(client);
-        setNewUsername(client.username);
-        setNewPassword("");
-        setNewStatus(client.status);
+        setPointsInput(client.points.toString());
     };
 
     const closeModal = () => {
         setEditingClient(null);
-        setNewUsername("");
-        setNewPassword("");
-        setNewStatus("active");
+        setPointsInput("");
     };
 
-    const handleUpdateClient = async () => {
+    const handleSavePoints = async () => {
         if (!editingClient) return;
 
-        if (!newUsername.trim()) {
-            toast.error("Username cannot be empty!");
+        const parsedPoints = parseInt(pointsInput, 10);
+
+        if (isNaN(parsedPoints) || parsedPoints <= 0) {
+            toast.error("Points must be greater than 0");
             return;
         }
 
-        // Mock PATCH call
-        try {
-            await new Promise((resolve) => setTimeout(resolve, 800));
+        // Mock API call
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
-            setClients((prev) =>
-                prev.map((c) =>
-                    c.id === editingClient.id
-                        ? { ...c, username: newUsername || c.username, status: newStatus }
-                        : c
-                )
-            );
+        setClients((prev) =>
+            prev.map((c) =>
+                c.id === editingClient.id ? { ...c, points: parsedPoints } : c
+            )
+        );
 
-            toast.success(`Client ${editingClient.id} updated successfully!`);
-            closeModal();
-        } catch (err) {
-            toast.error("Failed to update client. Please try again.");
-        }
+        toast.success(`Points updated for ${editingClient.username}!`);
+        closeModal();
     };
 
     // Pagination logic
@@ -89,20 +90,18 @@ function ManageClients() {
 
     const totalPages = Math.ceil(clients.length / rowsPerPage);
     const maxVisiblePages = 3;
-
     const startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
     const pageNumbers = [];
-    for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(i);
-    }
+    for (let i = startPage; i <= endPage; i++) pageNumbers.push(i);
 
     return (
         <div className="p-6">
             <ToastContainer position="top-right" autoClose={3000} />
 
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Manage Clients</h2>
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">
+                Manage Clients
+            </h2>
 
             {loading ? (
                 <p className="text-center text-slate-500">Loading clients...</p>
@@ -129,12 +128,20 @@ function ManageClients() {
                                     >
                                         <td className="px-6 py-4 font-medium">{client.id}</td>
                                         <td className="px-6 py-4">{client.username}</td>
-                                        <td className="px-6 py-4">{client.points}</td>
+                                        <td className="px-6 py-4 flex items-center gap-2">
+                                            {client.points}
+                                            <button
+                                                onClick={() => openPointsModal(client)}
+                                                className="text-blue-600 hover:text-blue-800"
+                                            >
+                                                <Pencil size={14} />
+                                            </button>
+                                        </td>
                                         <td className="px-6 py-4">
                                             <span
                                                 className={`px-2 py-1 text-xs font-medium rounded-full ${client.status === "active"
-                                                    ? "bg-green-100 text-green-700"
-                                                    : "bg-red-100 text-red-700"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : "bg-red-100 text-red-700"
                                                     }`}
                                             >
                                                 {client.status}
@@ -150,17 +157,17 @@ function ManageClients() {
                                             </a>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <a
-                                                href={`/clients/${client.id}/history`}
+                                            <Link
+                                                to={`/clients/${client.id}/history`}
                                                 className="flex items-center text-purple-600 hover:underline"
                                             >
                                                 <History size={16} className="mr-1" />
                                                 History
-                                            </a>
+                                            </Link>
                                         </td>
                                         <td className="px-6 py-4">
                                             <button
-                                                onClick={() => openEditModal(client)}
+                                                onClick={() => openPointsModal(client)}
                                                 className="flex items-center px-3 py-1 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
                                             >
                                                 <Pencil size={14} className="mr-1" />
@@ -212,8 +219,8 @@ function ManageClients() {
                                 disabled={currentPage === 1}
                                 onClick={() => setCurrentPage(1)}
                                 className={`px-3 py-1 rounded-md border ${currentPage === 1
-                                    ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                    : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
+                                        ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                        : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
                                     }`}
                             >
                                 «
@@ -222,8 +229,8 @@ function ManageClients() {
                                 disabled={currentPage === 1}
                                 onClick={() => setCurrentPage((prev) => prev - 1)}
                                 className={`p-2 rounded-md ${currentPage === 1
-                                    ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                    : "bg-slate-100 hover:bg-slate-200"
+                                        ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                        : "bg-slate-100 hover:bg-slate-200"
                                     }`}
                             >
                                 <ChevronLeft size={18} />
@@ -234,8 +241,8 @@ function ManageClients() {
                                     key={num}
                                     onClick={() => setCurrentPage(num)}
                                     className={`px-3 py-1 rounded-md border ${currentPage === num
-                                        ? "bg-blue-100 border-blue-400 text-blue-600 font-bold"
-                                        : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
+                                            ? "bg-blue-100 border-blue-400 text-blue-600 font-bold"
+                                            : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
                                         }`}
                                 >
                                     {num}
@@ -246,8 +253,8 @@ function ManageClients() {
                                 disabled={currentPage === totalPages}
                                 onClick={() => setCurrentPage((prev) => prev + 1)}
                                 className={`p-2 rounded-md ${currentPage === totalPages
-                                    ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                    : "bg-slate-100 hover:bg-slate-200"
+                                        ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                        : "bg-slate-100 hover:bg-slate-200"
                                     }`}
                             >
                                 <ChevronRight size={18} />
@@ -256,8 +263,8 @@ function ManageClients() {
                                 disabled={currentPage === totalPages}
                                 onClick={() => setCurrentPage(totalPages)}
                                 className={`px-3 py-1 rounded-md border ${currentPage === totalPages
-                                    ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                    : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
+                                        ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                        : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
                                     }`}
                             >
                                 »
@@ -267,7 +274,7 @@ function ManageClients() {
                 </>
             )}
 
-            {/* Update Modal */}
+            {/* Update Points Modal */}
             {editingClient && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
@@ -278,63 +285,41 @@ function ManageClients() {
                             <X size={20} />
                         </button>
 
-                        <h3 className="text-xl font-semibold text-slate-800 mb-4">
-                            Update Client
+                        <h3 className="text-xl font-bold text-slate-800 mb-2">
+                            Update Points
                         </h3>
+                        <p className="text-sm text-slate-600 mb-4">
+                            Enter a new points value for{" "}
+                            <span className="font-semibold">{editingClient.username}</span>.
+                        </p>
 
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
-                                    Username
-                                </label>
-                                <input
-                                    type="text"
-                                    value={newUsername}
-                                    onChange={(e) => setNewUsername(e.target.value)}
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    placeholder="Enter new password"
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
-                                    Status
-                                </label>
-                                <select
-                                    value={newStatus}
-                                    onChange={(e) => setNewStatus(e.target.value as "active" | "inactive")}
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                                >
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                                Points
+                            </label>
+                            <input
+                                type="number"
+                                min={1}
+                                value={pointsInput}
+                                onChange={(e) =>
+                                    setPointsInput(e.target.value.replace(/^0+/, ""))
+                                }
+                                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            />
                         </div>
 
                         <div className="flex justify-end gap-3 mt-6">
                             <button
                                 onClick={closeModal}
-                                className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700"
+                                className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700"
                             >
                                 Cancel
                             </button>
                             <button
-                                onClick={handleUpdateClient}
+                                onClick={handleSavePoints}
                                 className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
                             >
-                                Save Changes
+                                Save
                             </button>
                         </div>
                     </div>
