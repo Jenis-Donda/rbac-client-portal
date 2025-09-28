@@ -45,6 +45,7 @@ function Dashboard() {
     const [currentTime, setCurrentTime] = useState(getCurrentTime());
     const [gridData, setGridData] = useState(initialGridData);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeCoin, setActiveCoin] = useState<number | null>(null); // 👉 track which coin is spinning
 
     // live clock
     useEffect(() => {
@@ -133,11 +134,13 @@ function Dashboard() {
     const handleClearAll = () => {
         const cleared = gridData.map((item) => ({ ...item, value: 0 }));
         setGridData(cleared);
+        setActiveCoin(null);
     };
 
     // submit (open modal)
     const handleSubmit = () => {
         setIsModalOpen(true);
+        setActiveCoin(null); // 👉 stop all coins when submitting
     };
 
     // confirm submit
@@ -227,11 +230,20 @@ function Dashboard() {
                 </div>
 
                 <div className="flex flex-row lg:flex-col w-full lg:w-24 justify-center lg:justify-start gap-4">
-                    <CoinCard imageUrl="/images/coins/coin1.png" />
-                    <CoinCard imageUrl="/images/coins/coin2.png" />
-                    <CoinCard imageUrl="/images/coins/coin5.png" />
-                    <CoinCard imageUrl="/images/coins/coin10.png" />
-                    <CoinCard imageUrl="/images/coins/coin20.png" />
+                    {[
+                        "/images/coins/coin1.png",
+                        "/images/coins/coin2.png",
+                        "/images/coins/coin5.png",
+                        "/images/coins/coin10.png",
+                        "/images/coins/coin20.png",
+                    ].map((coin, index) => (
+                        <CoinCard
+                            key={index}
+                            imageUrl={coin}
+                            isActive={activeCoin === index}
+                            onClick={() => setActiveCoin(index)}
+                        />
+                    ))}
                 </div>
             </div>
 

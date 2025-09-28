@@ -44,12 +44,23 @@ const GridSquare: React.FC<GridSquareProps> = ({ index, title, value, onSave }) 
   const bgColor = colors[index % colors.length];
 
   const handleChange = (delta: number) => {
-  const newValue = Math.max(0, currentValue + delta); // prevent going below 0
-  setCurrentValue(newValue);
-  if (onSave) {
-    onSave(index, newValue); // notify parent
-  }
-};
+    const newValue = Math.max(0, currentValue + delta); // prevent going below 0
+    setCurrentValue(newValue);
+    if (onSave) {
+      onSave(index, newValue); // notify parent
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove non-digits and strip leading zeros
+    const rawValue = e.target.value.replace(/\D/g, "").replace(/^0+(?=\d)/, "");
+    const numericValue = rawValue === "" ? 0 : parseInt(rawValue, 10);
+
+    setCurrentValue(numericValue);
+    if (onSave) {
+      onSave(index, numericValue);
+    }
+  };
 
 
   return (
@@ -77,7 +88,22 @@ const GridSquare: React.FC<GridSquareProps> = ({ index, title, value, onSave }) 
           >
             -
           </button>
-          <p className="text-white text-lg font-bold">{currentValue}</p>
+
+          {/* Editable number input */}
+          <input
+            type="text"
+            value={currentValue.toString()}
+            onChange={handleInputChange}
+            className="text-center bg-transparent text-white text-lg font-bold outline-none 
+    [&::-webkit-inner-spin-button]:appearance-none 
+    [&::-webkit-outer-spin-button]:appearance-none 
+    [-moz-appearance:textfield]"
+            style={{
+              width: `${Math.min(currentValue.toString().length, 9)}ch`
+            }} // 👈 expand up to 9ch, then stop
+          />
+
+
           <button
             onClick={() => handleChange(1)}
             className="text-white text-lg font-bold opacity-0 group-hover:opacity-100 transition-opacity hover:text-green-400"
