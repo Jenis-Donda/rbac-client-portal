@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,10 +11,7 @@ interface Transaction {
     createdBy: string;
 }
 
-function Transactions() {
-    const { id } = useParams<{ id: string }>();
-    const clientId = id ? Number(id) : null;
-
+function MyTransactions() {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -45,7 +41,7 @@ function Transactions() {
         };
 
         fetchTransactions();
-    }, [clientId]);
+    }, []);
 
     // Pagination logic
     const totalPages = Math.ceil(transactions.length / rowsPerPage);
@@ -60,15 +56,15 @@ function Transactions() {
     );
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
     const pageNumbers = [];
-    for (let i = startPage; i <= endPage; i++) pageNumbers.push(i);
+    for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+    }
 
     return (
         <div className="p-6">
             <ToastContainer position="top-right" autoClose={3000} />
 
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">
-                {clientId !== null ? `Client ${clientId} - Transactions` : "Transactions"}
-            </h2>
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">Transactions</h2>
 
             {loading ? (
                 <p className="text-center text-slate-500">Loading transactions...</p>
@@ -158,16 +154,16 @@ function Transactions() {
                             >
                                 «
                             </button>
-                            <button
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage((prev) => prev - 1)}
-                                className={`p-2 rounded-md ${currentPage === 1
+                                <button
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                                    className={`p-2 rounded-md ${currentPage === 1
                                         ? "bg-slate-200 text-slate-400 cursor-not-allowed"
                                         : "bg-slate-100 hover:bg-slate-200"
-                                    }`}
-                            >
-                                <ChevronLeft size={18} />
-                            </button>
+                                        }`}
+                                >
+                                    <ChevronLeft size={18} />
+                                </button>
 
                             {pageNumbers.map((num) => (
                                 <button
@@ -182,16 +178,16 @@ function Transactions() {
                                 </button>
                             ))}
 
-                            <button
-                                disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage((prev) => prev + 1)}
-                                className={`p-2 rounded-md ${currentPage === totalPages
+                                <button
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                                    className={`p-2 rounded-md ${currentPage === totalPages
                                         ? "bg-slate-200 text-slate-400 cursor-not-allowed"
                                         : "bg-slate-100 hover:bg-slate-200"
-                                    }`}
-                            >
-                                <ChevronRight size={18} />
-                            </button>
+                                        }`}
+                                >
+                                    <ChevronRight size={18} />
+                                </button>
                             <button
                                 disabled={currentPage === totalPages}
                                 onClick={() => setCurrentPage(totalPages)}
@@ -210,4 +206,4 @@ function Transactions() {
     );
 }
 
-export default Transactions;
+export default MyTransactions;

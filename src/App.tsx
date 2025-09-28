@@ -8,12 +8,14 @@ import AddClient from "./pages/AddClient";
 import ManageClients from "./pages/ManageClients";
 import Transactions from "./pages/Transactions";
 import AddMaster from "./pages/AddMaster";
+import MyHistoryPage from "./pages/MyHistory";
+import MyTransactions from "./pages/MyTransactions";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Example role (replace with actual auth context or API later)
-  const userRole = "super admin";
+  const userRole = "master admin";
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
@@ -27,11 +29,13 @@ function App() {
         <main className="p-6 h-[calc(100%-4rem)] overflow-y-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/my-history" element={<MyHistoryPage />} />
             <Route path="/clients/:id/history" element={<HistoryPage />} />
             <Route path="/add-client" element={<AddClient />} />
             <Route path="/add-master" element={<AddMaster />} />
             <Route path="/manage-clients" element={<ManageClients />} />
-            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/my-transactions" element={<MyTransactions />} />
+            <Route path="/clients/:id/transactions" element={<Transactions />} />
           </Routes>
         </main>
       </div>

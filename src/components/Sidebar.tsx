@@ -43,26 +43,26 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, role }) => {
         )}
 
         
-        {role === "admin" && (<>
+        {(role === "admin" || role === "master admin") && (<>
           <Link
-            to="/history"
+            to="/my-history"
             className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-700"
             onClick={toggleSidebar}
           >
             <History size={18} className="mr-2" />
-            History
+            My History
           </Link>
           </>
         )}
 
         {role === "master admin" && (<>
           <Link
-            to="/transactions"
+            to="/my-transactions"
             className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-700"
             onClick={toggleSidebar}
           >
             <Wallet size={18} className="mr-2" />
-            Transactions
+            My Transactions
           </Link>
         </>
         )}

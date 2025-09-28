@@ -148,13 +148,13 @@ function ManageClients() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <a
-                                                href={`/clients/${client.id}/transactions`}
+                                            <Link
+                                                to={`/clients/${client.id}/transactions`}
                                                 className="flex items-center text-blue-600 hover:underline"
                                             >
                                                 <LinkIcon size={16} className="mr-1" />
                                                 Transactions
-                                            </a>
+                                            </Link>
                                         </td>
                                         <td className="px-6 py-4">
                                             <Link
