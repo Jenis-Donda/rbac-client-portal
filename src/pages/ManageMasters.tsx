@@ -16,6 +16,10 @@ interface Master {
     username: string;
     points: number;
     status: "active" | "inactive";
+    cr?: number;
+    pl?: number;
+    plPercent?: number;
+    exposure?: number;
 }
 
 function ManageMasters() {
@@ -47,6 +51,10 @@ function ManageMasters() {
                 username: `Master${i + 1}`,
                 points: Math.floor(Math.random() * 2000),
                 status: Math.random() > 0.5 ? "active" : "inactive",
+                cr: Math.floor(Math.random() * 1000),
+                pl: Math.floor(Math.random() * 5000),
+                plPercent: parseFloat((Math.random() * 100).toFixed(2)),
+                exposure: Math.floor(Math.random() * 10000),
             }));
 
             setMasters(dummyData);
@@ -165,7 +173,11 @@ function ManageMasters() {
                                 <tr>
                                     <th className="px-6 py-3">Master ID</th>
                                     <th className="px-6 py-3">Username</th>
+                                    <th className="px-6 py-3">CR</th>
                                     <th className="px-6 py-3">Points</th>
+                                    <th className="px-6 py-3">Client (P/L)</th>
+                                    <th className="px-6 py-3">Client (P/L) %</th>
+                                    <th className="px-6 py-3">Exposure</th>
                                     <th className="px-6 py-3">Status</th>
                                     <th className="px-6 py-3">Transactions</th>
                                     <th className="px-6 py-3">History</th>
@@ -180,6 +192,7 @@ function ManageMasters() {
                                     >
                                         <td className="px-6 py-4 font-medium">{Master.id}</td>
                                         <td className="px-6 py-4">{Master.username}</td>
+                                        <td className="px-6 py-4">{Master.cr}</td>
                                         <td className="px-6 py-4 flex items-center gap-2">
                                             {Master.points}
                                             <button
@@ -189,6 +202,9 @@ function ManageMasters() {
                                                 <Pencil size={14} />
                                             </button>
                                         </td>
+                                        <td className="px-6 py-4">{Master.pl}</td>
+                                        <td className="px-6 py-4">{Master.plPercent}%</td>
+                                        <td className="px-6 py-4">{Master.exposure}</td>
                                         <td className="px-6 py-4">
                                             <span
                                                 className={`px-2 py-1 text-xs font-medium rounded-full ${Master.status === "active"
