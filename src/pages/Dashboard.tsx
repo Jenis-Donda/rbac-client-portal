@@ -41,11 +41,14 @@ const initialGridData = [
     { title: "Meditation", value: 0 },
 ];
 
+// Coin values (matches your coins)
+const coinValues = [1, 2, 5, 10, 20];
+
 function Dashboard() {
     const [currentTime, setCurrentTime] = useState(getCurrentTime());
     const [gridData, setGridData] = useState(initialGridData);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeCoin, setActiveCoin] = useState<number | null>(null); // 👉 track which coin is spinning
+    const [activeCoin, setActiveCoin] = useState<number | null>(null); // 👉 track which coin is active
 
     // live clock
     useEffect(() => {
@@ -130,6 +133,17 @@ function Dashboard() {
         );
     };
 
+    // handle clicking a card (adds selected coin value)
+    const handleCardClick = (index: number) => {
+        if (activeCoin === null) return;
+        const valueToAdd = coinValues[activeCoin];
+        setGridData((prev) =>
+            prev.map((item, i) =>
+                i === index ? { ...item, value: item.value + valueToAdd } : item
+            )
+        );
+    };
+
     // clear all values
     const handleClearAll = () => {
         const cleared = gridData.map((item) => ({ ...item, value: 0 }));
@@ -146,7 +160,7 @@ function Dashboard() {
     // confirm submit
     const confirmSubmit = () => {
         console.log("Saving bet values:", gridData);
-        // 👉 call API here to save bets
+        setIsModalOpen(false);
     };
 
     return (
@@ -173,13 +187,14 @@ function Dashboard() {
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         {gridData.map((item, index) => (
-                            <GridSquare
-                                key={index}
-                                index={index}
-                                title={item.title}
-                                value={item.value}
-                                onSave={handleSaveGridValue}
-                            />
+                            <div key={index} onClick={() => handleCardClick(index)}>
+                                <GridSquare
+                                    index={index}
+                                    title={item.title}
+                                    value={item.value}
+                                    onSave={handleSaveGridValue}
+                                />
+                            </div>
                         ))}
                     </div>
 

@@ -18,7 +18,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Example role (replace with actual auth context or API later)
-  const userRole = "super admin";
+  const userRole = "admin";
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
