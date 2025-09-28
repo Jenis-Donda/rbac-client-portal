@@ -13,12 +13,13 @@ import MyTransactions from "./pages/MyTransactions";
 import ManageMasters from "./pages/ManageMasters";
 import MasterHistoryPage from "./pages/MasterHistory";
 import MasterTransactions from "./pages/MasterTransactions";
+import DrawHistory from "./pages/DrawHistory";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Example role (replace with actual auth context or API later)
-  const userRole = "admin";
+  const userRole = "super admin";
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
@@ -37,6 +38,7 @@ function App() {
             <Route path="/masters/:id/history" element={<MasterHistoryPage />} />
             <Route path="/add-client" element={<AddClient />} />
             <Route path="/add-master" element={<AddMaster />} />
+            <Route path="/draw-history" element={<DrawHistory />} />
             <Route path="/manage-clients" element={<ManageClients />} />
             <Route path="/manage-masters" element={<ManageMasters />} />
             <Route path="/my-transactions" element={<MyTransactions />} />

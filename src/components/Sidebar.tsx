@@ -67,6 +67,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, role }) => {
         </>
         )}
 
+        {role === "super admin" && (<>
+          <Link
+            to="/draw-history"
+            className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-700"
+            onClick={toggleSidebar}
+          >
+            <Wallet size={18} className="mr-2" />
+            Draw History
+          </Link>
+        </>
+        )}
+
         {/* 👑 Master Admin only */}
         {role === "master admin" && (
           <div>
