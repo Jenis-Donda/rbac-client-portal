@@ -12,7 +12,7 @@ interface Transaction {
     createdBy: string;
 }
 
-function Transactions() {
+function MasterTransactions() {
     const { id } = useParams<{ id: string }>();
     const clientId = id ? Number(id) : null;
     const navigate = useNavigate();
@@ -80,7 +80,7 @@ function Transactions() {
                 <ToastContainer position="top-right" autoClose={3000} />
 
                 <h2 className="text-2xl font-bold text-slate-800 mb-6">
-                    {clientId !== null ? `Client ${clientId} - Transactions` : "Transactions"}
+                    {clientId !== null ? `Master ${clientId} - Transactions` : "Transactions"}
                 </h2>
 
                 {loading ? (
@@ -110,8 +110,8 @@ function Transactions() {
                                             <td className="px-6 py-4">
                                                 <span
                                                     className={`px-2 py-1 text-xs font-medium rounded-full ${tx.type === "deposit"
-                                                            ? "bg-green-100 text-green-700"
-                                                            : "bg-red-100 text-red-700"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : "bg-red-100 text-red-700"
                                                         }`}
                                                 >
                                                     {tx.type === "deposit" ? "Deposit" : "Withdrawal"}
@@ -163,8 +163,8 @@ function Transactions() {
                                     disabled={currentPage === 1}
                                     onClick={() => setCurrentPage(1)}
                                     className={`px-3 py-1 rounded-md border ${currentPage === 1
-                                            ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                            : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
+                                        ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                        : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
                                         }`}
                                 >
                                     «
@@ -173,8 +173,8 @@ function Transactions() {
                                     disabled={currentPage === 1}
                                     onClick={() => setCurrentPage((prev) => prev - 1)}
                                     className={`p-2 rounded-md ${currentPage === 1
-                                            ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                            : "bg-slate-100 hover:bg-slate-200"
+                                        ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                        : "bg-slate-100 hover:bg-slate-200"
                                         }`}
                                 >
                                     <ChevronLeft size={18} />
@@ -185,8 +185,8 @@ function Transactions() {
                                         key={num}
                                         onClick={() => setCurrentPage(num)}
                                         className={`px-3 py-1 rounded-md border ${currentPage === num
-                                                ? "bg-blue-100 border-blue-400 text-blue-600 font-bold"
-                                                : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
+                                            ? "bg-blue-100 border-blue-400 text-blue-600 font-bold"
+                                            : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
                                             }`}
                                     >
                                         {num}
@@ -197,8 +197,8 @@ function Transactions() {
                                     disabled={currentPage === totalPages}
                                     onClick={() => setCurrentPage((prev) => prev + 1)}
                                     className={`p-2 rounded-md ${currentPage === totalPages
-                                            ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                            : "bg-slate-100 hover:bg-slate-200"
+                                        ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                        : "bg-slate-100 hover:bg-slate-200"
                                         }`}
                                 >
                                     <ChevronRight size={18} />
@@ -207,8 +207,8 @@ function Transactions() {
                                     disabled={currentPage === totalPages}
                                     onClick={() => setCurrentPage(totalPages)}
                                     className={`px-3 py-1 rounded-md border ${currentPage === totalPages
-                                            ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                            : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
+                                        ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                        : "bg-white border-slate-300 text-slate-600 hover:bg-slate-100"
                                         }`}
                                 >
                                     »
@@ -222,4 +222,4 @@ function Transactions() {
     );
 }
 
-export default Transactions;
+export default MasterTransactions;

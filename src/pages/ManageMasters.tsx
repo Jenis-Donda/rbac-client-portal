@@ -11,24 +11,24 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 
-interface Client {
+interface Master {
     id: number;
     username: string;
     points: number;
     status: "active" | "inactive";
 }
 
-function ManageClients() {
-    const [clients, setClients] = useState<Client[]>([]);
+function ManageMasters() {
+    const [Masters, setMasters] = useState<Master[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Points modal state
-    const [editingClient, setEditingClient] = useState<Client | null>(null);
+    const [editingMaster, setEditingMaster] = useState<Master | null>(null);
     const [pointsInput, setPointsInput] = useState<string>("");
     const [transactionType, setTransactionType] = useState<"credit" | "withdrawal">("credit");
 
     // Edit modal state
-    const [editingDetailsClient, setEditingDetailsClient] = useState<Client | null>(null);
+    const [editingDetailsMaster, setEditingDetailsMaster] = useState<Master | null>(null);
     const [usernameInput, setUsernameInput] = useState("");
     const [passwordInput, setPasswordInput] = useState("");
     const [statusInput, setStatusInput] = useState<"active" | "inactive">("active");
@@ -38,38 +38,38 @@ function ManageClients() {
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     useEffect(() => {
-        const fetchClients = async () => {
+        const fetchMasters = async () => {
             setLoading(true);
             await new Promise((resolve) => setTimeout(resolve, 800));
 
-            const dummyData: Client[] = Array.from({ length: 34 }, (_, i) => ({
+            const dummyData: Master[] = Array.from({ length: 34 }, (_, i) => ({
                 id: i + 1,
-                username: `Client${i + 1}`,
+                username: `Master${i + 1}`,
                 points: Math.floor(Math.random() * 2000),
                 status: Math.random() > 0.5 ? "active" : "inactive",
             }));
 
-            setClients(dummyData);
+            setMasters(dummyData);
             setLoading(false);
         };
 
-        fetchClients();
+        fetchMasters();
     }, []);
 
     // ---- Points Modal ----
-    const openPointsModal = (client: Client) => {
-        setEditingClient(client);
+    const openPointsModal = (Master: Master) => {
+        setEditingMaster(Master);
         setPointsInput("");
         setTransactionType("credit");
     };
 
     const closePointsModal = () => {
-        setEditingClient(null);
+        setEditingMaster(null);
         setPointsInput("");
     };
 
     const handleSavePoints = async () => {
-        if (!editingClient) return;
+        if (!editingMaster) return;
 
         const parsedPoints = parseInt(pointsInput, 10);
         if (isNaN(parsedPoints) || parsedPoints <= 0) {
@@ -79,9 +79,9 @@ function ManageClients() {
 
         await new Promise((resolve) => setTimeout(resolve, 800));
 
-        setClients((prev) =>
+        setMasters((prev) =>
             prev.map((c) =>
-                c.id === editingClient.id
+                c.id === editingMaster.id
                     ? {
                         ...c,
                         points:
@@ -95,54 +95,54 @@ function ManageClients() {
 
         toast.success(
             `${transactionType === "credit" ? "Credited" : "Withdrawn"} ${parsedPoints
-            } points for ${editingClient.username}!`
+            } points for ${editingMaster.username}!`
         );
         closePointsModal();
     };
 
     // ---- Edit Details Modal ----
-    const openEditDetailsModal = (client: Client) => {
-        setEditingDetailsClient(client);
-        setUsernameInput(client.username);
+    const openEditDetailsModal = (Master: Master) => {
+        setEditingDetailsMaster(Master);
+        setUsernameInput(Master.username);
         setPasswordInput("");
-        setStatusInput(client.status);
+        setStatusInput(Master.status);
     };
 
     const closeEditDetailsModal = () => {
-        setEditingDetailsClient(null);
+        setEditingDetailsMaster(null);
         setUsernameInput("");
         setPasswordInput("");
         setStatusInput("active");
     };
 
     const handleSaveDetails = async () => {
-        if (!editingDetailsClient) return;
+        if (!editingDetailsMaster) return;
 
         await new Promise((resolve) => setTimeout(resolve, 800));
 
-        setClients((prev) =>
+        setMasters((prev) =>
             prev.map((c) =>
-                c.id === editingDetailsClient.id
+                c.id === editingDetailsMaster.id
                     ? {
                         ...c,
                         username: usernameInput,
                         status: statusInput,
-                        // password won't be stored in dummy client
+                        // password won't be stored in dummy Master
                     }
                     : c
             )
         );
 
-        toast.success(`Details updated for ${editingDetailsClient.username}!`);
+        toast.success(`Details updated for ${editingDetailsMaster.username}!`);
         closeEditDetailsModal();
     };
 
     // ---- Pagination ----
     const indexOfLastRow = currentPage * rowsPerPage;
     const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-    const currentRows = clients.slice(indexOfFirstRow, indexOfLastRow);
+    const currentRows = Masters.slice(indexOfFirstRow, indexOfLastRow);
 
-    const totalPages = Math.ceil(clients.length / rowsPerPage);
+    const totalPages = Math.ceil(Masters.length / rowsPerPage);
     const maxVisiblePages = 3;
     const startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
@@ -153,17 +153,17 @@ function ManageClients() {
         <div className="p-6">
             <ToastContainer position="top-right" autoClose={3000} />
 
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Manage Clients</h2>
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">Manage Masters</h2>
 
             {loading ? (
-                <p className="text-center text-slate-500">Loading clients...</p>
+                <p className="text-center text-slate-500">Loading Masters...</p>
             ) : (
                 <>
                     <div className="overflow-x-auto rounded-xl shadow-lg border border-slate-200">
                         <table className="min-w-full text-sm text-left text-slate-700">
                             <thead className="bg-slate-100 text-slate-900 text-sm uppercase font-semibold">
                                 <tr>
-                                    <th className="px-6 py-3">Client ID</th>
+                                    <th className="px-6 py-3">Master ID</th>
                                     <th className="px-6 py-3">Username</th>
                                     <th className="px-6 py-3">Points</th>
                                     <th className="px-6 py-3">Status</th>
@@ -173,17 +173,17 @@ function ManageClients() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-200">
-                                {currentRows.map((client) => (
+                                {currentRows.map((Master) => (
                                     <tr
-                                        key={client.id}
+                                        key={Master.id}
                                         className="hover:bg-slate-50 transition-colors"
                                     >
-                                        <td className="px-6 py-4 font-medium">{client.id}</td>
-                                        <td className="px-6 py-4">{client.username}</td>
+                                        <td className="px-6 py-4 font-medium">{Master.id}</td>
+                                        <td className="px-6 py-4">{Master.username}</td>
                                         <td className="px-6 py-4 flex items-center gap-2">
-                                            {client.points}
+                                            {Master.points}
                                             <button
-                                                onClick={() => openPointsModal(client)}
+                                                onClick={() => openPointsModal(Master)}
                                                 className="text-blue-600 hover:text-blue-800"
                                             >
                                                 <Pencil size={14} />
@@ -191,17 +191,17 @@ function ManageClients() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <span
-                                                className={`px-2 py-1 text-xs font-medium rounded-full ${client.status === "active"
+                                                className={`px-2 py-1 text-xs font-medium rounded-full ${Master.status === "active"
                                                     ? "bg-green-100 text-green-700"
                                                     : "bg-red-100 text-red-700"
                                                     }`}
                                             >
-                                                {client.status}
+                                                {Master.status}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
                                             <Link
-                                                to={`/clients/${client.id}/transactions`}
+                                                to={`/masters/${Master.id}/transactions`}
                                                 className="flex items-center text-blue-600 hover:underline"
                                             >
                                                 <LinkIcon size={16} className="mr-1" />
@@ -210,7 +210,7 @@ function ManageClients() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <Link
-                                                to={`/clients/${client.id}/history`}
+                                                to={`/masters/${Master.id}/history`}
                                                 className="flex items-center text-purple-600 hover:underline"
                                             >
                                                 <History size={16} className="mr-1" />
@@ -219,7 +219,7 @@ function ManageClients() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <button
-                                                onClick={() => openEditDetailsModal(client)}
+                                                onClick={() => openEditDetailsModal(Master)}
                                                 className="text-blue-600 hover:text-blue-800"
                                             >
                                                 <Pencil size={16} />
@@ -228,13 +228,13 @@ function ManageClients() {
                                     </tr>
                                 ))}
 
-                                {clients.length === 0 && (
+                                {Masters.length === 0 && (
                                     <tr>
                                         <td
                                             colSpan={7}
                                             className="px-6 py-4 text-center text-slate-500"
                                         >
-                                            No clients found
+                                            No Masters found
                                         </td>
                                     </tr>
                                 )}
@@ -326,7 +326,7 @@ function ManageClients() {
             )}
 
             {/* Points Update Modal */}
-            {editingClient && (
+            {editingMaster && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
                         <button
@@ -341,7 +341,7 @@ function ManageClients() {
                         </h3>
                         <p className="text-sm text-slate-600 mb-4">
                             Enter a points value for{" "}
-                            <span className="font-semibold">{editingClient.username}</span>.
+                            <span className="font-semibold">{editingMaster.username}</span>.
                         </p>
 
                         <div className="mb-4">
@@ -394,7 +394,7 @@ function ManageClients() {
             )}
 
             {/* Edit Details Modal */}
-            {editingDetailsClient && (
+            {editingDetailsMaster && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
                         <button
@@ -405,7 +405,7 @@ function ManageClients() {
                         </button>
 
                         <h3 className="text-xl font-bold text-slate-800 mb-2">
-                            Edit Client Details
+                            Edit Master Details
                         </h3>
 
                         <div className="mb-4">
@@ -470,4 +470,4 @@ function ManageClients() {
     );
 }
 
-export default ManageClients;
+export default ManageMasters;

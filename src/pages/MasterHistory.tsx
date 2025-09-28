@@ -22,7 +22,7 @@ interface HistoryItem {
     yantras: Yantra[];
 }
 
-const HistoryPage: React.FC = () => {
+const MasterHistoryPage: React.FC = () => {
     const yantraList = [
         { name: "Shree", image: "/images/yantra/shree.jfif" },
         { name: "Vastu", image: "/images/yantra/vastu.jpg" },
@@ -32,7 +32,7 @@ const HistoryPage: React.FC = () => {
     ];
 
     const { id } = useParams<{ id: string }>();
-    const clientId = Number(id);
+    const masterId = Number(id);
     const navigate = useNavigate();
 
     const [historyData, setHistoryData] = useState<HistoryItem[]>([]);
@@ -48,7 +48,7 @@ const HistoryPage: React.FC = () => {
             await new Promise((res) => setTimeout(res, 800));
 
             const mockData: HistoryItem[] = Array.from({ length: 25 }, (_, i) => ({
-                ticketNumber: `CL${clientId}-TCK-${1001 + i}`,
+                ticketNumber: `CL${masterId}-TCK-${1001 + i}`,
                 tickets: Math.floor(Math.random() * 5) + 1,
                 points: Math.floor(Math.random() * 100) + 10,
                 result: Math.random() > 0.5 ? "Win" : "Lose",
@@ -67,7 +67,7 @@ const HistoryPage: React.FC = () => {
         };
 
         fetchHistory();
-    }, [clientId]);
+    }, [masterId]);
 
     // Pagination
     const indexOfLastRow = currentPage * rowsPerPage;
@@ -99,13 +99,13 @@ const HistoryPage: React.FC = () => {
 
             {/* White container */}
             <div className="bg-white/80 backdrop-blur-xl shadow-lg rounded-2xl p-6 mx-auto max-w-6xl">
-                <h2 className="text-2xl font-bold text-slate-800 mb-4">{clientId} - History</h2>
+                <h2 className="text-2xl font-bold text-slate-800 mb-4">{masterId} - History</h2>
 
                 {loading ? (
                     <p className="text-center text-slate-500 py-8">Loading history...</p>
                 ) : historyData.length === 0 ? (
                     <p className="text-center text-slate-500 py-8">
-                        No history available for {clientId}.
+                        No history available for {masterId}.    
                     </p>
                 ) : (
                     <>
@@ -144,8 +144,8 @@ const HistoryPage: React.FC = () => {
                                             <div className="px-4 py-3">
                                                 <span
                                                     className={`px-3 py-1 text-xs font-bold rounded-full ${row.result === "Win"
-                                                            ? "bg-green-100 text-green-600"
-                                                            : "bg-red-100 text-red-600"
+                                                        ? "bg-green-100 text-green-600"
+                                                        : "bg-red-100 text-red-600"
                                                         }`}
                                                 >
                                                     {row.result}
@@ -261,4 +261,4 @@ const HistoryPage: React.FC = () => {
     );
 };
 
-export default HistoryPage;
+export default MasterHistoryPage;

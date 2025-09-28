@@ -129,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, role }) => {
                   Add Master
                 </Link>
                 <Link
-                  to="/manage-clients"
+                  to="/manage-masters"
                   className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-700 text-sm"
                   onClick={toggleSidebar}
                 >
